@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Follow our journey</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=PT+Serif:ital,wght@0,400;0,700;1,400&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #f4f7f5;
+      --ink-muted: rgba(244, 247, 245, 0.68);
+      --ink-faint: rgba(244, 247, 245, 0.42);
+      --line: rgba(255, 255, 255, 0.28);
+      --line-strong: rgba(255, 255, 255, 0.55);
+      --glass: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.16);
+      --accent: #c8d9c4;
+      --overlay-top: rgba(10, 20, 25, 0.55);
+      --overlay-bottom: rgba(10, 20, 25, 0.75);
+      --header-h: 4.25rem;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      /* Newspaper article tokens (cards only) */
+      --paper: #f4ecd8;
+      --paper-edge: #e6d9bc;
+      --news-ink: #1a1612;
+      --news-ink-muted: #4a433a;
+      --news-rule: #1a1612;
+      --stamp: #a63d2f;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Sora", sans-serif;
+      color: var(--ink);
+      background-color: #0a1419;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Fixed full-bleed landscape */
+    .bg {
+      position: fixed;
+      inset: 0;
+      z-index: -2;
+      background: url("background.jpg") center / cover no-repeat;
+    }
+
+    .bg::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(var(--overlay-top), var(--overlay-bottom));
+    }
+
+    /* Sticky header */
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0 clamp(1.25rem, 4vw, 2.5rem);
+      background: transparent;
+      border-bottom: 1px solid transparent;
+      transition: background 0.35s var(--ease), border-color 0.35s var(--ease),
+        backdrop-filter 0.35s var(--ease), -webkit-backdrop-filter 0.35s var(--ease);
+    }
+
+    .site-header.is-scrolled {
+      background: rgba(10, 20, 25, 0.35);
+      border-bottom-color: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .brand img {
+      width: 2.35rem;
+      height: 2.35rem;
+      object-fit: contain;
+      display: block;
+      padding: 0.35rem;
+      background: #000;
+      border-radius: 0.55rem;
+      box-sizing: border-box;
+    }
+
+    .brand-text {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .brand-title {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: clamp(1.05rem, 2.8vw, 1.45rem);
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      line-height: 1.15;
+    }
+
+    .brand-tagline {
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+
+    /* Market-size counters */
+    .market-counters {
+      display: flex;
+      align-items: stretch;
+      gap: clamp(0.85rem, 2vw, 1.5rem);
+      flex-shrink: 0;
+    }
+
+    .market-counter {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.15rem;
+      text-align: right;
+    }
+
+    .market-counter + .market-counter {
+      padding-left: clamp(0.85rem, 2vw, 1.5rem);
+      border-left: 1px solid rgba(255, 255, 255, 0.16);
+    }
+
+    .market-counter-value {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: clamp(1.2rem, 2.6vw, 1.7rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      color: var(--ink);
+      font-variant-numeric: tabular-nums;
+      min-width: 5.5ch;
+    }
+
+    .market-counter-label {
+      font-size: 0.58rem;
+      font-weight: 400;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      max-width: 9.5rem;
+      line-height: 1.35;
+    }
+
+    main {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      padding: 0 clamp(1.25rem, 4vw, 2.5rem) 4rem;
+    }
+
+    /* Hero — one composition */
+    .hero {
+      min-height: calc(100vh - var(--header-h));
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 0 0 clamp(4rem, 12vh, 7rem);
+      max-width: 36rem;
+    }
+
+    .hero h1 {
+      font-family: "Instrument Serif", Georgia, serif;
+      font-size: clamp(2.75rem, 7vw, 4.5rem);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.15rem;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero p {
+      font-size: clamp(0.95rem, 2vw, 1.1rem);
+      font-weight: 300;
+      color: var(--ink-muted);
+      max-width: 28rem;
+    }
+
+    .hero-traction {
+      margin-top: 1.25rem !important;
+      font-size: 0.78rem !important;
+      font-weight: 400 !important;
+      letter-spacing: 0.04em;
+      color: var(--ink-faint) !important;
+      max-width: 32rem !important;
+      line-height: 1.5;
+    }
+
+    .scroll-cue {
+      margin-top: 2.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      text-decoration: none;
+    }
+
+    .scroll-cue::before {
+      content: "";
+      width: 1.5rem;
+      height: 1px;
+      background: var(--ink-faint);
+      transition: width 0.35s var(--ease);
+    }
+
+    .scroll-cue:hover::before {
+      width: 2.25rem;
+      background: var(--ink-muted);
+    }
+
+    /* Threaded timeline + small newspaper windows */
+    .timeline-section {
+      padding: 2rem 0 3rem;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      margin-bottom: 2.5rem;
+      text-align: center;
+    }
+
+    .timeline {
+      position: relative;
+      padding: 1rem 0 2rem;
+    }
+
+    .timeline-items {
+      position: relative;
+    }
+
+    .timeline-track {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 2px;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.14);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .timeline-progress {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 0%;
+      background: linear-gradient(
+        to bottom,
+        rgba(244, 236, 216, 0.35),
+        rgba(244, 236, 216, 0.85)
+      );
+      border-radius: 2px;
+      transition: height 0.15s linear;
+    }
+
+    .timeline-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-bottom: clamp(2.25rem, 4.5vw, 3.25rem);
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s var(--ease), transform 0.7s var(--ease);
+    }
+
+    .timeline-item.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-node {
+      position: absolute;
+      top: 1.75rem;
+      left: 50%;
+      width: 0.8rem;
+      height: 0.8rem;
+      transform: translate(-50%, 0) scale(0.6);
+      border-radius: 50%;
+      background: rgba(10, 20, 25, 0.85);
+      border: 2px solid rgba(244, 236, 216, 0.55);
+      z-index: 2;
+      transition: transform 0.55s var(--ease), border-color 0.55s var(--ease),
+        box-shadow 0.55s var(--ease), background 0.55s var(--ease);
+    }
+
+    .timeline-item.is-visible .timeline-node {
+      transform: translate(-50%, 0) scale(1);
+      border-color: var(--paper);
+      box-shadow: 0 0 0 4px rgba(244, 236, 216, 0.12);
+    }
+
+    .timeline-item.is-current .timeline-node {
+      background: var(--stamp);
+      border-color: var(--paper);
+      box-shadow: 0 0 0 5px rgba(166, 61, 47, 0.22);
+    }
+
+    .timeline-card-wrap {
+      grid-column: 1;
+      padding-right: clamp(1.35rem, 3.5vw, 2.5rem);
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .timeline-item:nth-child(even) .timeline-card-wrap {
+      grid-column: 2;
+      padding-right: 0;
+      padding-left: clamp(1.35rem, 3.5vw, 2.5rem);
+      justify-content: flex-start;
+    }
+
+    /* Small newspaper window */
+    .news-card {
+      position: relative;
+      width: min(100%, 22.5rem);
+      background: var(--paper);
+      color: var(--news-ink);
+      padding: 1rem 1.15rem 1.15rem;
+      box-shadow:
+        0 1px 0 rgba(255, 255, 255, 0.4) inset,
+        0 10px 28px rgba(0, 0, 0, 0.22);
+    }
+
+    .timeline-item:nth-child(odd) .news-card {
+      transform: translateX(-10px);
+    }
+
+    .timeline-item:nth-child(even) .news-card {
+      transform: translateX(10px);
+    }
+
+    .timeline-item.is-visible .news-card {
+      transform: translateX(0);
+      transition: transform 0.7s var(--ease);
+    }
+
+    .news-masthead {
+      text-align: center;
+      margin-bottom: 0.65rem;
+      padding-bottom: 0.55rem;
+      border-bottom: 1px solid var(--news-ink);
+      box-shadow: 0 3px 0 -2px var(--news-ink);
+    }
+
+    .news-edition {
+      display: block;
+      font-family: "PT Serif", Georgia, serif;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--news-ink);
+    }
+
+    .news-dates {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(1.35rem, 2.8vw, 1.7rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -0.01em;
+      text-align: center;
+      margin: 0.55rem 0 0.45rem;
+      color: var(--news-ink);
+    }
+
+    .news-kicker {
+      display: block;
+      text-align: center;
+      font-family: "PT Serif", Georgia, serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--news-ink-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .news-headline {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      line-height: 1.3;
+      text-align: center;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid rgba(26, 22, 18, 0.25);
+      color: var(--news-ink);
+    }
+
+    .news-bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      font-family: "PT Serif", Georgia, serif;
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: var(--news-ink);
+      text-align: left;
+    }
+
+    .news-bullets li {
+      position: relative;
+      padding-left: 0.85rem;
+    }
+
+    .news-bullets li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      top: 0;
+      color: var(--news-ink-muted);
+    }
+
+    .latest-stamp {
+      position: absolute;
+      top: 0.55rem;
+      right: 0.45rem;
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 0.58rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--stamp);
+      border: 2px solid var(--stamp);
+      padding: 0.2rem 0.35rem;
+      transform: rotate(11deg);
+      opacity: 0.9;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    /* Footer */
+    .site-footer {
+      width: min(1100px, 100%);
+      margin: 0 auto;
+      padding: 2rem clamp(1.25rem, 4vw, 2.5rem) 3rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.75rem 1.5rem;
+      font-size: 0.8rem;
+      color: var(--ink-faint);
+    }
+
+    .site-footer a {
+      color: var(--ink-muted);
+      text-decoration: none;
+      border-bottom: 1px solid transparent;
+      transition: border-color 0.25s, color 0.25s;
+    }
+
+    .site-footer a:hover {
+      color: var(--ink);
+      border-bottom-color: var(--ink-faint);
+    }
+
+    @media (max-width: 768px) {
+      .timeline-track {
+        left: 0.85rem;
+        transform: none;
+      }
+
+      .market-counters {
+        gap: 0.65rem;
+      }
+
+      .market-counter + .market-counter {
+        padding-left: 0.65rem;
+      }
+
+      .market-counter-label {
+        max-width: 5.5rem;
+        font-size: 0.5rem;
+      }
+
+      .market-counter-value {
+        font-size: 1.05rem;
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+        padding-left: 2.15rem;
+      }
+
+      .timeline-node {
+        left: 0.85rem;
+      }
+
+      .timeline-card-wrap,
+      .timeline-item:nth-child(even) .timeline-card-wrap {
+        grid-column: 1;
+        padding: 0;
+        justify-content: flex-start;
+      }
+
+      .timeline-item:nth-child(odd) .news-card,
+      .timeline-item:nth-child(even) .news-card {
+        transform: translateX(-8px);
+        width: 100%;
+      }
+
+      .timeline-item.is-visible .news-card {
+        transform: translateX(0);
+      }
+
+      .hero {
+        justify-content: center;
+        padding-bottom: 3rem;
+      }
+
+      .site-footer {
+        flex-direction: column;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+
+      .timeline-item,
+      .timeline-item .news-card,
+      .timeline-node,
+      .timeline-progress {
+        transition: none !important;
+      }
+
+      .timeline-item {
+        opacity: 1;
+        transform: none;
+      }
+
+      .timeline-item .news-card {
+        transform: none;
+      }
+
+      .timeline-node {
+        transform: translate(-50%, 0) scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg" aria-hidden="true"></div>
+
+  <header class="site-header" id="siteHeader">
+    <a class="brand" href="#top">
+      <img src="logo.png" alt="" width="38" height="38" />
+      <span class="brand-text">
+        <span class="brand-title">Follow our journey</span>
+      </span>
+    </a>
+    <div class="market-counters" aria-live="polite">
+      <div class="market-counter">
+        <span class="market-counter-value" data-target="239265">0</span>
+        <span class="market-counter-label">US manufacturing firms</span>
+      </div>
+      <div class="market-counter">
+        <span class="market-counter-value" data-target="122609">0</span>
+        <span class="market-counter-label">Canada manufacturing firms</span>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero" aria-labelledby="hero-heading">
+      <h1 id="hero-heading">
+        Building momentum,<br /><em>week by week.</em>
+      </h1>
+      <p>
+        Following the current, not fighting it
+      </p>
+      <p class="hero-traction">
+        25 hardware companies spoken to · BC Instruments piloting · Siemens Energy supply-chain demos underway
+      </p>
+      <a class="scroll-cue" href="#timeline">Weekly progress</a>
+    </section>
+
+    <section class="timeline-section" id="timeline" aria-labelledby="timeline-label">
+      <p class="section-label" id="timeline-label">Progress timeline</p>
+      <div class="timeline">
+        <div class="timeline-track" aria-hidden="true">
+          <div class="timeline-progress" id="timelineProgress"></div>
+        </div>
+        <div class="timeline-items" id="timelineRoot"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>
+      <a href="https://cal.com/dhruv-thakkar-6tulbc/30min" target="_blank" rel="noopener noreferrer">Book a demo</a>
+      <span class="footer-sep" aria-hidden="true"> · </span>
+      <a href="https://getvoltforge.com/" target="_blank" rel="noopener noreferrer">getvoltforge.com</a>
+    </p>
+    <p>Last updated: July 26, 2026</p>
+  </footer>
+
+  <script>
+    /**
+     * Weekly editions — add a new object to extend the series.
+     * status: "complete" | "in-progress"
+     */
+    const WEEKS = [
+      {
+        week: 1,
+        kicker: "PRODUCT",
+        dateRange: "Jun 22 – Jun 28",
+        status: "complete",
+        heading: "Design data retrieval is broken",
+        bullets: [
+          "Ran product demos with Siemens Energy and Renesas",
+          "Confirmed retrieving information from design files is slow and manual",
+        ],
+      },
+      {
+        week: 2,
+        kicker: "BUILD",
+        dateRange: "Jun 29 – Jul 5",
+        status: "complete",
+        heading: "MVP underway, conversations widen",
+        bullets: [
+          "Expanded conversations with more Siemens Energy teams and YC startups",
+          "Started competitive research on how others handle engineering docs",
+        ],
+      },
+      {
+        week: 3,
+        kicker: "ENGINEERING",
+        dateRange: "Jul 6 – Jul 12",
+        status: "complete",
+        heading: "Connectors live — retrieval unblocked",
+        bullets: [
+          "Built integrations for Siemens Energy, Boron, and BC Instruments",
+          "Split connectors into design files, systems of record, and standard text — driven by BCI needing local design files, SAP4HANA, and email",
+          "Connectors tested — retrieval from design files no longer a blocker",
+        ],
+      },
+      {
+        week: 4,
+        kicker: "PARTNERSHIPS",
+        dateRange: "Jul 13 – Jul 19",
+        status: "complete",
+        heading: "Two demos with Boron",
+        bullets: [
+          "Ran 2 demos with Boron",
+          "They loved the Q&A tool but wanted automation — added GitHub after they asked",
+          "Started talking to hardware machine shops and began building agentic automations",
+          "Identified a bigger problem than retrieval: ensuring correct retrieval",
+          "Using the right information to predict and suggest workflows that could be automated based on how teams actually work",
+        ],
+      },
+      {
+        week: 5,
+        kicker: "STRATEGY",
+        dateRange: "Jul 20 – Jul 26",
+        status: "complete",
+        heading: "BC Instruments agrees to pilot",
+        bullets: [
+          "BC Instruments agreed to a pilot with 5 pilot users — paperwork pending",
+          "Talked to 25 hardware companies so far, including ~8 machine shops — 23/25 still upload PDFs to Copilot",
+          "Siemens Energy: demos and active conversations with 3 internal teams; referrals into their supply chain — actively demoing to machine shops they introduced (FBT Tooling, Canadian Babbit Bearing, Innox, All Tool Manufacturing)",
+          "Engineering memory layer live in production; multi-agent collaborative workspace in alpha",
+          "Pitched Barn VC and sharpened GTM from their feedback; in talks with Mars IAF for a pre-seed cheque",
+          "1 enterprise pilot underway; more precision contract manufacturers in active talks",
+        ],
+      },
+      {
+        week: 6,
+        kicker: "PLATFORM",
+        dateRange: "Jul 27 – Aug 2",
+        status: "in-progress",
+        heading: "Multiplayer AI & machining market",
+        bullets: [
+          "Continuing Siemens Energy supply-chain demos and machine-shop conversations",
+          "Advancing BC Instruments pilot paperwork toward signed deal",
+        ],
+      },
+    ];
+
+    const root = document.getElementById("timelineRoot");
+    const progressEl = document.getElementById("timelineProgress");
+    const header = document.getElementById("siteHeader");
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function renderTimeline(weeks) {
+      const frag = document.createDocumentFragment();
+      const lastIndex = weeks.length - 1;
+
+      weeks.forEach((entry, index) => {
+        const item = document.createElement("article");
+        const isLatest = index === lastIndex;
+        item.className =
+          "timeline-item" +
+          (entry.status === "in-progress" ? " is-current" : "");
+        item.dataset.week = String(entry.week);
+
+        const bullets = entry.bullets
+          .map((b) => `<li>${escapeHtml(b)}</li>`)
+          .join("");
+
+        const stamp = isLatest
+          ? `<span class="latest-stamp" aria-label="Latest">Latest</span>`
+          : "";
+
+        item.innerHTML = `
+          <div class="timeline-node" aria-hidden="true"></div>
+          <div class="timeline-card-wrap">
+            <div class="news-card">
+              <div class="news-masthead">
+                <span class="news-edition">Edition ${entry.week}</span>
+              </div>
+              <h2 class="news-dates">${escapeHtml(entry.dateRange)}</h2>
+              <span class="news-kicker">${escapeHtml(entry.kicker)}</span>
+              <p class="news-headline">${escapeHtml(entry.heading)}</p>
+              <ul class="news-bullets">${bullets}</ul>
+              ${stamp}
+            </div>
+          </div>
+        `;
+
+        frag.appendChild(item);
+      });
+
+      root.appendChild(frag);
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function setupReveal() {
+      const items = root.querySelectorAll(".timeline-item");
+
+      if (reduceMotion) {
+        items.forEach((el) => el.classList.add("is-visible"));
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.22, rootMargin: "0px 0px -8% 0px" }
+      );
+
+      items.forEach((el) => observer.observe(el));
+    }
+
+    function updateLineProgress() {
+      if (!progressEl) return;
+
+      const timeline = root.closest(".timeline") || root;
+      const rect = timeline.getBoundingClientRect();
+      const viewMid = window.innerHeight * 0.55;
+      const start = rect.top;
+      const end = rect.bottom;
+      const total = end - start;
+
+      if (total <= 0) return;
+
+      let pct = ((viewMid - start) / total) * 100;
+      pct = Math.max(0, Math.min(100, pct));
+
+      if (reduceMotion) {
+        progressEl.style.height = "100%";
+        return;
+      }
+
+      progressEl.style.height = pct + "%";
+    }
+
+    function onScroll() {
+      header.classList.toggle("is-scrolled", window.scrollY > 24);
+      updateLineProgress();
+    }
+
+    renderTimeline(WEEKS);
+    setupReveal();
+    onScroll();
+    animateMarketCounter();
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", updateLineProgress, { passive: true });
+
+    function animateMarketCounter() {
+      const els = document.querySelectorAll(".market-counter-value[data-target]");
+      if (!els.length) return;
+
+      const DURATION = 2200;
+
+      els.forEach((el) => {
+        const TARGET = Number(el.dataset.target) || 0;
+
+        if (reduceMotion) {
+          el.textContent = TARGET.toLocaleString("en-US");
+          return;
+        }
+
+        const start = performance.now();
+
+        function tick(now) {
+          const t = Math.min(1, (now - start) / DURATION);
+          const eased = 1 - Math.pow(1 - t, 3);
+          const value = Math.round(TARGET * eased);
+          el.textContent = value.toLocaleString("en-US");
+          if (t < 1) requestAnimationFrame(tick);
+        }
+
+        requestAnimationFrame(tick);
+      });
+    }
+  </script>
+</body>
+</html>
